@@ -163,7 +163,7 @@
   failed_when: "'3.12.2' not in sops_version.stdout"
 
 - name: Check SSH agent command
-  ansible.builtin.command: command -v ssh-agent
+  ansible.builtin.command: which ssh-agent
   register: ssh_agent_check
   changed_when: false
   failed_when: ssh_agent_check.rc != 0
