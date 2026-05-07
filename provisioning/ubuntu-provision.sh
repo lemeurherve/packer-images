@@ -577,6 +577,21 @@ function install_goss() {
   chmod +rx /usr/local/bin/goss
 }
 
+## Install Ansible Core for validation testing
+function install_ansible() {
+  apt-get update --quiet
+  apt-get install --yes --no-install-recommends python3-venv python3-pip
+
+  # Create isolated virtual environment for Ansible
+  python3 -m venv /usr/local/ansible-venv
+  /usr/local/ansible-venv/bin/pip --no-cache-dir install --upgrade pip setuptools wheel
+  /usr/local/ansible-venv/bin/pip --no-cache-dir install "ansible-core==${ANSIBLE_CORE_VERSION}"
+
+  # Create symlinks for easy access
+  ln -sf /usr/local/ansible-venv/bin/ansible-playbook /usr/local/bin/ansible-playbook
+  ln -sf /usr/local/ansible-venv/bin/ansible /usr/local/bin/ansible
+}
+
 ## Install Nodejs with asdf
 function install_nodejs() {
   # Ensure that ASDF is installed
@@ -667,6 +682,7 @@ function main() {
   install_azcopy
   install_doctl
   install_python
+  install_ansible # Install after python for test validation
   install_docker_compose
   install_maven
   install_hadolint
