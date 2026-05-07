@@ -15,7 +15,7 @@
       changed_when: false
       async: 20
       poll: 1
-      failed_when: "'2.34.43' not in awscli_version.stdout"
+      failed_when: "expected_versions.awscli not in awscli_version.stdout"
 
     - name: Check Azure CLI version
       ansible.builtin.command: az --version
@@ -23,7 +23,7 @@
       changed_when: false
       async: 20
       poll: 1
-      failed_when: "'2.86.0' not in azurecli_version.stdout"
+      failed_when: "expected_versions.azurecli not in azurecli_version.stdout"
 
     - name: Check Bundle version
       ansible.builtin.command: bundle -v
@@ -35,13 +35,13 @@
       ansible.builtin.command: container-structure-test version
       register: cst_version
       changed_when: false
-      failed_when: "'1.22.1' not in cst_version.stdout"
+      failed_when: "expected_versions.cst not in cst_version.stdout"
 
     - name: Check Docker version
       ansible.builtin.command: docker -v
       register: docker_version
       changed_when: false
-      failed_when: "'29.4.2' not in docker_version.stdout"
+      failed_when: "expected_versions.docker not in docker_version.stdout"
 
     - name: Check Docker Buildx version
       ansible.builtin.command: docker buildx version
@@ -67,19 +67,19 @@
       ansible.builtin.command: docker-compose -v
       register: docker_compose_version
       changed_when: false
-      failed_when: "'5.1.3' not in docker_compose_version.stdout"
+      failed_when: "expected_versions.compose not in docker_compose_version.stdout"
 
     - name: Check GitHub CLI version
       ansible.builtin.command: gh --version
       register: gh_version
       changed_when: false
-      failed_when: "'2.92.0' not in gh_version.stdout"
+      failed_when: "expected_versions.gh not in gh_version.stdout"
 
     - name: Check Git LFS version
       ansible.builtin.command: git-lfs --version
       register: git_lfs_version
       changed_when: false
-      failed_when: "'3.7.1' not in git_lfs_version.stdout"
+      failed_when: "expected_versions.git_lfs not in git_lfs_version.stdout"
 
     - name: Check Hadolint version
       ansible.builtin.command: hadolint --version
@@ -87,31 +87,31 @@
       changed_when: false
       async: 60
       poll: 1
-      failed_when: "'2.14.0' not in hadolint_version.stdout"
+      failed_when: "expected_versions.hadolint not in hadolint_version.stdout"
 
     - name: Check jq version
       ansible.builtin.command: jq --version
       register: jq_version
       changed_when: false
-      failed_when: "'jq-1.6' not in jq_version.stdout"
+      failed_when: "('jq-' + expected_versions.jq) not in jq_version.stdout"
 
     - name: Check jx-release-version
       ansible.builtin.command: jx-release-version -version
       register: jxreleaseversion_version
       changed_when: false
-      failed_when: "'2.8.4' not in jxreleaseversion_version.stdout"
+      failed_when: "expected_versions.jxreleaseversion not in jxreleaseversion_version.stdout"
 
     - name: Check kubectl version
       ansible.builtin.command: kubectl version --client
       register: kubectl_version
       changed_when: false
-      failed_when: "'1.33.11' not in kubectl_version.stdout"
+      failed_when: "expected_versions.kubectl not in kubectl_version.stdout"
 
     - name: Check Launchable version
       ansible.builtin.command: launchable --version
       register: launchable_version
       changed_when: false
-      failed_when: "'1.123.2' not in launchable_version.stdout"
+      failed_when: "expected_versions.launchable not in launchable_version.stdout"
 
     - name: Check Make version
       ansible.builtin.command: make --version
@@ -137,7 +137,7 @@
       changed_when: false
       async: 20
       poll: 1
-      failed_when: "'1.15.3' not in packer_version.stdout"
+      failed_when: "expected_versions.packer not in packer_version.stdout"
 
     - name: Check Terraform version
       ansible.builtin.command: terraform -v
@@ -145,16 +145,16 @@
       changed_when: false
       async: 20
       poll: 1
-      failed_when: "'1.12.2' not in terraform_version.stdout"
+      failed_when: "expected_versions.terraform not in terraform_version.stdout"
 
     - name: Check Updatecli version
       ansible.builtin.command: updatecli version
       register: updatecli_version
       changed_when: false
-      failed_when: "'0.116.3' not in updatecli_version.stdout"
+      failed_when: "expected_versions.updatecli not in updatecli_version.stdout"
 
     - name: Check yq version
       ansible.builtin.command: yq --version
       register: yq_version
       changed_when: false
-      failed_when: "'4.53.2' not in yq_version.stdout"
+      failed_when: "expected_versions.yq not in yq_version.stdout"
