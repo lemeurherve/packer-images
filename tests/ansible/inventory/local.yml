@@ -1,0 +1,7 @@
+---
+# Inventory for local Ansible execution during Packer builds
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+      ansible_python_interpreter: auto

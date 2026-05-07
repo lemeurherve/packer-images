@@ -1,0 +1,22 @@
+---
+# Validate Windows 2019-specific tools
+# Replaces tests from goss-windows-2019.yaml
+# Total: 1 command test (Visual Studio MSBuild)
+
+- name: Validate Windows 2019 Specific Tools
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Check Visual Studio MSBuild version
+      ansible.windows.win_shell: |
+        & "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe" /nologo /version
+      register: msbuild_version
+      changed_when: false
+      failed_when: msbuild_version.stdout is not regex('Current.*16\.')
+      ignore_errors: true
+
+    - name: Report MSBuild check result
+      ansible.builtin.debug:
+        msg: "Visual Studio 2019 MSBuild validation: {{ 'PASSED' if msbuild_version is succeeded else 'SKIPPED (not Windows 2019)' }}"

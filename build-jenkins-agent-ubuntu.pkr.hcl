@@ -46,30 +46,19 @@ build {
     script           = "./provisioning/ubuntu-provision.sh"
   }
 
-  provisioner "file" {
-    source      = "./tests/goss-linux.yaml"
-    destination = "/tmp/goss-linux.yaml"
+  # Run Ansible validation tests
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-common.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "/tmp/ansible"
+    command           = "cd {{.PlaybookDir}} && sudo -E -u jenkins bash -c 'ANSIBLE_FORCE_COLOR=1 ANSIBLE_NOCOLOR=false ansible-playbook {{.PlaybookFile}}'"
   }
 
-  provisioner "file" {
-    source      = "./tests/goss-common.yaml"
-    destination = "/tmp/goss-common.yaml"
-  }
-
-  provisioner "breakpoint" {
-    note    = "Enable this breakpoint to pause before trying to run goss tests"
-    disable = true
-  }
-
-  provisioner "shell" {
-    execute_command  = "{{ .Vars }} sudo -E su - jenkins -c \"bash -eu '{{ .Path }}'\""
-    environment_vars = local.provisioning_env_vars
-    inline = [
-      "source /home/jenkins/.asdf/asdf.sh", # Required as this is a non-interactive and non-login `bash`
-      "goss --version",
-      "goss --gossfile /tmp/goss-linux.yaml --loglevel DEBUG validate",
-      "goss --gossfile /tmp/goss-common.yaml --loglevel DEBUG validate",
-    ]
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-linux.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "/tmp/ansible"
+    command           = "cd {{.PlaybookDir}} && sudo -E -u jenkins bash -c 'source /home/jenkins/.asdf/asdf.sh && ANSIBLE_FORCE_COLOR=1 ANSIBLE_NOCOLOR=false ansible-playbook {{.PlaybookFile}}'"
   }
 
   post-processor "docker-tag" {

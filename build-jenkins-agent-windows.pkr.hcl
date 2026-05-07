@@ -93,24 +93,23 @@ build {
     pause_before = "1m"
   }
 
-  #provisioner "file" {
-  #  source      = "./tests/goss-windows-2019.yaml"
-  #  destination = "C:/goss-windows-2019.yaml"
-  #}
+  # Run Ansible validation tests
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-common.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "C:/ansible"
+  }
 
-  #provisioner "file" {
-  #  source      = "./tests/goss-windows.yaml"
-  #  destination = "C:/goss-windows.yaml"
-  #}
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-windows.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "C:/ansible"
+  }
 
-  #provisioner "file" {
-  #  source      = "./tests/goss-common.yaml"
-  #  destination = "C:/goss-common.yaml"
-  #}
-
-  provisioner "breakpoint" {
-    note    = "Enable this breakpoint to pause before trying to run goss tests"
-    disable = true
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-windows-2019.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "C:/ansible"
   }
 
   # Sanity check for PowerShell: ensure that pwsh is present

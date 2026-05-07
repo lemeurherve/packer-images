@@ -1,0 +1,24 @@
+---
+# Simple playbook to test Ansible installation
+- name: Test Ansible Installation
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Display Ansible version
+      ansible.builtin.debug:
+        msg: "Ansible is working! Version: {{ ansible_version.full }}"
+
+    - name: Test command execution
+      ansible.builtin.command: echo "Hello from Ansible"
+      register: test_output
+      changed_when: false
+
+    - name: Display test output
+      ansible.builtin.debug:
+        msg: "Command output: {{ test_output.stdout }}"
+
+    - name: Verify Python interpreter
+      ansible.builtin.debug:
+        msg: "Python interpreter: {{ ansible_python_interpreter }}"

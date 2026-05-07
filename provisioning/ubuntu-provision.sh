@@ -568,13 +568,19 @@ function install_kubectl() {
   chmod a+x /usr/local/bin/kubectl
 }
 
-## Ensure Goss is installed
-function install_goss() {
+## Install Ansible Core for validation testing
+function install_ansible() {
   apt-get update --quiet
-  apt-get install --yes --no-install-recommends curl # Should already be there but this function should be autonomous
+  apt-get install --yes --no-install-recommends python3-venv python3-pip
 
-  curl --silent --location --show-error "https://github.com/goss-org/goss/releases/download/v${GOSS_VERSION}/goss-linux-${ARCHITECTURE}" --output /usr/local/bin/goss
-  chmod +rx /usr/local/bin/goss
+  # Create isolated virtual environment for Ansible
+  python3 -m venv /usr/local/ansible-venv
+  /usr/local/ansible-venv/bin/pip --no-cache-dir install --upgrade pip setuptools wheel
+  /usr/local/ansible-venv/bin/pip --no-cache-dir install "ansible-core==${ANSIBLE_CORE_VERSION}"
+
+  # Create symlinks for easy access
+  ln -sf /usr/local/ansible-venv/bin/ansible-playbook /usr/local/bin/ansible-playbook
+  ln -sf /usr/local/ansible-venv/bin/ansible /usr/local/bin/ansible
 }
 
 ## Install Nodejs with asdf
@@ -657,7 +663,6 @@ function main() {
   install_git_gitlfs
   install_ssh_requirements # Ensure that OpenSSH CLI and SSH agent are installed
   install_asdf # Before all the others but after the jenkins home is created
-  install_goss # needed by the pipeline
   install_docker # needed by the pipeline
   install_jdks # needed by the pipeline
   install_chromium
@@ -667,6 +672,7 @@ function main() {
   install_azcopy
   install_doctl
   install_python
+  install_ansible # Install after python for test validation
   install_docker_compose
   install_maven
   install_hadolint
