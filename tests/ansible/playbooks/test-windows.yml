@@ -9,8 +9,18 @@
   gather_facts: false
   vars_files:
     - ../../../provisioning/tools-versions.yml
+    - ../../../jdks-infos.yaml
 
   tasks:
+    - name: Extract JDK versions from installer URLs
+      ansible.builtin.set_fact:
+        jdk8_version: "1.8.0_{{ windows.amd64.jdk8.installer_url | regex_search('8u(\\d+)b', '\\1') | first }}"
+        jdk11_version: "{{ windows.amd64.jdk11.installer_url | regex_search('hotspot_(\\d+\\.\\d+\\.\\d+)_(\\d+)', '\\1', '\\2') | join('+') }}"
+        jdk17_version: "{{ windows.amd64.jdk17.installer_url | regex_search('hotspot_(\\d+\\.\\d+\\.\\d+)_(\\d+)', '\\1', '\\2') | join('+') }}"
+        jdk21_version: "{{ windows.amd64.jdk21.installer_url | regex_search('hotspot_(\\d+\\.\\d+\\.\\d+)_(\\d+)', '\\1', '\\2') | join('+') }}"
+        jdk25_version: "{{ windows.amd64.jdk25.installer_url | regex_search('hotspot_(\\d+\\.\\d+\\.\\d+)_(\\d+)', '\\1', '\\2') | join('+') }}"
+      changed_when: false
+
     - name: Check Chocolatey (expects exit code 1)
       ansible.windows.win_shell: choco
       register: choco_check

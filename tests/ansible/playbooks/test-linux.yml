@@ -9,10 +9,20 @@
   gather_facts: false
   vars_files:
     - ../../../provisioning/tools-versions.yml
+    - ../../../jdks-infos.yaml
   environment:
     PATH: "/home/jenkins/.asdf/shims:/home/jenkins/.asdf/bin:{{ ansible_env.PATH }}"
 
   tasks:
+    - name: Extract JDK versions from installer URLs
+      ansible.builtin.set_fact:
+        jdk8_version: "1.8.0_{{ ubuntu.amd64.jdk8.installer_url | regex_search('8u(\\d+)b', '\\1') | first }}"
+        jdk11_version: "{{ ubuntu.amd64.jdk11.installer_url | regex_search('hotspot_(\\d+\\.\\d+\\.\\d+)_(\\d+)', '\\1', '\\2') | join('+') }}"
+        jdk17_version: "{{ ubuntu.amd64.jdk17.installer_url | regex_search('hotspot_(\\d+\\.\\d+\\.\\d+)_(\\d+)', '\\1', '\\2') | join('+') }}"
+        jdk21_version: "{{ ubuntu.amd64.jdk21.installer_url | regex_search('hotspot_(\\d+\\.\\d+\\.\\d+)_(\\d+)', '\\1', '\\2') | join('+') }}"
+        jdk25_version: "{{ ubuntu.amd64.jdk25.installer_url | regex_search('hotspot_(\\d+\\.\\d+\\.\\d+)_(\\d+)', '\\1', '\\2') | join('+') }}"
+      changed_when: false
+
     - name: Check asdf version
       ansible.builtin.command: asdf version
       register: asdf_version_output
