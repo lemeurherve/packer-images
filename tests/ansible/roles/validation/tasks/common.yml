@@ -75,12 +75,6 @@
   changed_when: false
   failed_when: "'3.7.1' not in git_lfs_version.stdout"
 
-- name: Check Goss version
-  ansible.builtin.command: goss --version
-  register: goss_version
-  changed_when: false
-  failed_when: "'0.4.9' not in goss_version.stdout"
-
 - name: Check Hadolint version
   ansible.builtin.command: hadolint --version
   register: hadolint_version

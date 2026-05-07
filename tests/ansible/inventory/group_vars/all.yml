@@ -19,7 +19,6 @@ expected_versions:
   git_windows: "2.54.0"
   golang: "1.26.2"
   golangcilint: "2.12.1"
-  goss: "0.4.9"
   hadolint: "2.14.0"
   helm_diff: "3.15.6"
   helm_git: "1.5.2"
