@@ -287,6 +287,20 @@ $downloads['goss'] = @{
     'url' = 'https://github.com/goss-org/goss/releases/download/v{0}/goss-windows-amd64.exe'  -f $env:GOSS_VERSION;
     'local' = "$baseDir\goss.exe"
 };
+$downloads['ansible'] = @{
+    'url' = 'placeholder';
+    'local' = $null;
+    'postInstall' = {
+        # Install ansible-core via pip (Python must be installed first)
+        $pythonExe = Get-Command python.exe -ErrorAction SilentlyContinue
+        if ($pythonExe) {
+            & $pythonExe.Path -m pip --no-cache-dir install --upgrade pip
+            & $pythonExe.Path -m pip --no-cache-dir install "ansible-core==$env:ANSIBLE_CORE_VERSION"
+        } else {
+            Write-Warning "Python not found, skipping Ansible installation"
+        }
+    };
+};
 $downloads['docker-buildx'] = @{
     'url' = 'https://github.com/docker/buildx/releases/download/v{0}/buildx-v{0}.windows-amd64.exe' -f $env:DOCKER_BUILDX_VERSION;
     'local' = "$dockerPluginsDir\docker-buildx.exe";
