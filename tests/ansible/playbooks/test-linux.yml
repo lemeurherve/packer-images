@@ -7,11 +7,11 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  environment:
+    PATH: "/home/jenkins/.asdf/shims:/home/jenkins/.asdf/bin:{{ ansible_env.PATH }}"
 
   tasks:
     - name: Include Linux validation tasks
       ansible.builtin.include_role:
         name: validation
         tasks_from: linux.yml
-      environment:
-        PATH: "/home/jenkins/.asdf/shims:/home/jenkins/.asdf/bin:{{ ansible_env.PATH }}"
