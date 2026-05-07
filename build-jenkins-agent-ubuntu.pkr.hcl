@@ -47,21 +47,18 @@ build {
   }
 
   # Run Ansible validation tests
-  provisioner "file" {
-    source      = "./tests/ansible"
-    destination = "/tmp/ansible"
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-common.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "/tmp/ansible"
+    command           = "cd {{.PlaybookDir}} && sudo -E -u jenkins bash -c 'ANSIBLE_FORCE_COLOR=1 ANSIBLE_NOCOLOR=false ansible-playbook {{.PlaybookFile}}'"
   }
 
-  provisioner "shell" {
-    execute_command  = "{{ .Vars }} sudo -E su - jenkins -c \"bash -eu '{{ .Path }}'\""
-    environment_vars = local.provisioning_env_vars
-    inline = [
-      "source /home/jenkins/.asdf/asdf.sh",
-      "echo '=== Running Ansible Validation Tests ==='",
-      "cd /tmp/ansible",
-      "ansible-playbook playbooks/test-common.yml",
-      "ansible-playbook playbooks/test-linux.yml",
-    ]
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-linux.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "/tmp/ansible"
+    command           = "cd {{.PlaybookDir}} && sudo -E -u jenkins bash -c 'source /home/jenkins/.asdf/asdf.sh && ANSIBLE_FORCE_COLOR=1 ANSIBLE_NOCOLOR=false ansible-playbook {{.PlaybookFile}}'"
   }
 
   post-processor "docker-tag" {

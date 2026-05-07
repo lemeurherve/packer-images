@@ -94,29 +94,22 @@ build {
   }
 
   # Run Ansible validation tests
-  provisioner "file" {
-    source      = "./tests/ansible"
-    destination = "C:/ansible"
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-common.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "C:/ansible"
   }
 
-  provisioner "powershell" {
-    max_retries      = 2
-    environment_vars = local.provisioning_env_vars
-    inline = [
-      "Write-Host '=== Running Ansible Common Tests ==='",
-      "cd C:/ansible",
-      "ansible-playbook playbooks/test-common.yml",
-      "Write-Host '=== Running Ansible Windows Tests ==='",
-      "ansible-playbook playbooks/test-windows.yml",
-      "$ErrorActionPreference = 'SilentlyContinue'",
-      "if (Test-Path playbooks/test-windows-${var.agent_os_version}.yml) {",
-      "  Write-Host '=== Running Ansible Windows ${var.agent_os_version} Tests ==='",
-      "  ansible-playbook playbooks/test-windows-${var.agent_os_version}.yml",
-      "} else {",
-      "  Write-Host 'INFO: no dedicated Windows ${var.agent_os_version} ansible playbook'",
-      "}",
-      "$ErrorActionPreference = 'Stop'",
-    ]
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-windows.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "C:/ansible"
+  }
+
+  provisioner "ansible-local" {
+    playbook_file     = "./tests/ansible/playbooks/test-windows-2019.yml"
+    playbook_dir      = "./tests/ansible"
+    staging_directory = "C:/ansible"
   }
 
   # Sanity check for PowerShell: ensure that pwsh is present
