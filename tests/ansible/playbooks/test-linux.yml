@@ -1,0 +1,17 @@
+---
+# Validate Linux-specific tools
+# Replaces tests from goss-linux.yaml
+# Total: 32 command tests + 1 file test
+
+- name: Validate Linux Jenkins Agent
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Include Linux validation tasks
+      ansible.builtin.include_role:
+        name: validation
+        tasks_from: linux.yml
+      environment:
+        PATH: "/home/jenkins/.asdf/shims:/home/jenkins/.asdf/bin:{{ ansible_env.PATH }}"
