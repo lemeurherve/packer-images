@@ -283,10 +283,6 @@ $downloads['kubectl'] = @{
     'url' = 'https://dl.k8s.io/release/v{0}/bin/windows/amd64/kubectl.exe'  -f $env:KUBECTL_VERSION;
     'local' = "$baseDir\kubectl.exe"
 };
-$downloads['goss'] = @{
-    'url' = 'https://github.com/goss-org/goss/releases/download/v{0}/goss-windows-amd64.exe'  -f $env:GOSS_VERSION;
-    'local' = "$baseDir\goss.exe"
-};
 $downloads['ansible'] = @{
     'url' = 'placeholder';
     'local' = $null;

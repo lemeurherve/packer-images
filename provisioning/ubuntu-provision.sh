@@ -568,15 +568,6 @@ function install_kubectl() {
   chmod a+x /usr/local/bin/kubectl
 }
 
-## Ensure Goss is installed
-function install_goss() {
-  apt-get update --quiet
-  apt-get install --yes --no-install-recommends curl # Should already be there but this function should be autonomous
-
-  curl --silent --location --show-error "https://github.com/goss-org/goss/releases/download/v${GOSS_VERSION}/goss-linux-${ARCHITECTURE}" --output /usr/local/bin/goss
-  chmod +rx /usr/local/bin/goss
-}
-
 ## Install Ansible Core for validation testing
 function install_ansible() {
   apt-get update --quiet
@@ -672,7 +663,6 @@ function main() {
   install_git_gitlfs
   install_ssh_requirements # Ensure that OpenSSH CLI and SSH agent are installed
   install_asdf # Before all the others but after the jenkins home is created
-  install_goss # needed by the pipeline
   install_docker # needed by the pipeline
   install_jdks # needed by the pipeline
   install_chromium
