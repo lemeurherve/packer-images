@@ -56,6 +56,24 @@ build {
     destination = "/tmp/goss-common.yaml"
   }
 
+  # Test Ansible installation
+  provisioner "file" {
+    source      = "./tests/ansible"
+    destination = "/tmp/ansible"
+  }
+
+  provisioner "shell" {
+    execute_command  = "{{ .Vars }} sudo -E su - jenkins -c \"bash -eu '{{ .Path }}'\""
+    environment_vars = local.provisioning_env_vars
+    inline = [
+      "source /home/jenkins/.asdf/asdf.sh",
+      "echo '=== Testing Ansible Installation ==='",
+      "ansible-playbook --version",
+      "cd /tmp/ansible",
+      "ansible-playbook playbooks/test-installation.yml",
+    ]
+  }
+
   provisioner "breakpoint" {
     note    = "Enable this breakpoint to pause before trying to run goss tests"
     disable = true
