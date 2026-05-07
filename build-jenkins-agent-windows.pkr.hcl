@@ -108,6 +108,32 @@ build {
   #  destination = "C:/goss-common.yaml"
   #}
 
+  # Run Ansible validation tests (Phase 4: Windows tests)
+  provisioner "file" {
+    source      = "./tests/ansible"
+    destination = "C:/ansible"
+  }
+
+  provisioner "powershell" {
+    max_retries      = 2
+    environment_vars = local.provisioning_env_vars
+    inline = [
+      "Write-Host '=== Running Ansible Common Tests ==='",
+      "cd C:/ansible",
+      "ansible-playbook playbooks/test-common.yml",
+      "Write-Host '=== Running Ansible Windows Tests ==='",
+      "ansible-playbook playbooks/test-windows.yml",
+      "$ErrorActionPreference = 'SilentlyContinue'",
+      "if (Test-Path playbooks/test-windows-${var.agent_os_version}.yml) {",
+      "  Write-Host '=== Running Ansible Windows ${var.agent_os_version} Tests ==='",
+      "  ansible-playbook playbooks/test-windows-${var.agent_os_version}.yml",
+      "} else {",
+      "  Write-Host 'INFO: no dedicated Windows ${var.agent_os_version} ansible playbook'",
+      "}",
+      "$ErrorActionPreference = 'Stop'",
+    ]
+  }
+
   provisioner "breakpoint" {
     note    = "Enable this breakpoint to pause before trying to run goss tests"
     disable = true
