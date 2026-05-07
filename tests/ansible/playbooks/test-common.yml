@@ -1,0 +1,15 @@
+---
+# Validate common tools (cross-platform)
+# Replaces tests from goss-common.yaml
+# Total: 23 command tests
+
+- name: Validate Common Tools (Cross-Platform)
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Include common validation tasks
+      ansible.builtin.include_role:
+        name: validation
+        tasks_from: common.yml
