@@ -56,7 +56,7 @@ build {
     destination = "/tmp/goss-common.yaml"
   }
 
-  # Run Ansible validation tests (Phase 2: Common tests in parallel with Goss)
+  # Run Ansible validation tests (Phase 2 & 3: Common + Linux tests in parallel with Goss)
   provisioner "file" {
     source      = "./tests/ansible"
     destination = "/tmp/ansible"
@@ -69,7 +69,9 @@ build {
       "source /home/jenkins/.asdf/asdf.sh",
       "echo '=== Running Ansible Common Tests ==='",
       "cd /tmp/ansible",
-      "ansible-playbook playbooks/test-common.yml || echo 'ANSIBLE FAILED'",
+      "ansible-playbook playbooks/test-common.yml || echo 'ANSIBLE COMMON FAILED'",
+      "echo '=== Running Ansible Linux Tests ==='",
+      "ansible-playbook playbooks/test-linux.yml || echo 'ANSIBLE LINUX FAILED'",
     ]
   }
 
