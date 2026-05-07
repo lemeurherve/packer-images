@@ -93,22 +93,7 @@ build {
     pause_before = "1m"
   }
 
-  #provisioner "file" {
-  #  source      = "./tests/goss-windows-2019.yaml"
-  #  destination = "C:/goss-windows-2019.yaml"
-  #}
-
-  #provisioner "file" {
-  #  source      = "./tests/goss-windows.yaml"
-  #  destination = "C:/goss-windows.yaml"
-  #}
-
-  #provisioner "file" {
-  #  source      = "./tests/goss-common.yaml"
-  #  destination = "C:/goss-common.yaml"
-  #}
-
-  # Run Ansible validation tests (Phase 4: Windows tests)
+  # Run Ansible validation tests
   provisioner "file" {
     source      = "./tests/ansible"
     destination = "C:/ansible"
@@ -132,11 +117,6 @@ build {
       "}",
       "$ErrorActionPreference = 'Stop'",
     ]
-  }
-
-  provisioner "breakpoint" {
-    note    = "Enable this breakpoint to pause before trying to run goss tests"
-    disable = true
   }
 
   # Sanity check for PowerShell: ensure that pwsh is present

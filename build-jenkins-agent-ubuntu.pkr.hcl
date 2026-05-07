@@ -46,17 +46,7 @@ build {
     script           = "./provisioning/ubuntu-provision.sh"
   }
 
-  provisioner "file" {
-    source      = "./tests/goss-linux.yaml"
-    destination = "/tmp/goss-linux.yaml"
-  }
-
-  provisioner "file" {
-    source      = "./tests/goss-common.yaml"
-    destination = "/tmp/goss-common.yaml"
-  }
-
-  # Run Ansible validation tests (Phase 2 & 3: Common + Linux tests in parallel with Goss)
+  # Run Ansible validation tests
   provisioner "file" {
     source      = "./tests/ansible"
     destination = "/tmp/ansible"
@@ -67,27 +57,10 @@ build {
     environment_vars = local.provisioning_env_vars
     inline = [
       "source /home/jenkins/.asdf/asdf.sh",
-      "echo '=== Running Ansible Common Tests ==='",
+      "echo '=== Running Ansible Validation Tests ==='",
       "cd /tmp/ansible",
-      "ansible-playbook playbooks/test-common.yml || echo 'ANSIBLE COMMON FAILED'",
-      "echo '=== Running Ansible Linux Tests ==='",
-      "ansible-playbook playbooks/test-linux.yml || echo 'ANSIBLE LINUX FAILED'",
-    ]
-  }
-
-  provisioner "breakpoint" {
-    note    = "Enable this breakpoint to pause before trying to run goss tests"
-    disable = true
-  }
-
-  provisioner "shell" {
-    execute_command  = "{{ .Vars }} sudo -E su - jenkins -c \"bash -eu '{{ .Path }}'\""
-    environment_vars = local.provisioning_env_vars
-    inline = [
-      "source /home/jenkins/.asdf/asdf.sh", # Required as this is a non-interactive and non-login `bash`
-      "goss --version",
-      "goss --gossfile /tmp/goss-linux.yaml --loglevel DEBUG validate",
-      "goss --gossfile /tmp/goss-common.yaml --loglevel DEBUG validate",
+      "ansible-playbook playbooks/test-common.yml",
+      "ansible-playbook playbooks/test-linux.yml",
     ]
   }
 
