@@ -30,13 +30,6 @@ targets:
       file: provisioning/tools-versions.yml
       key: $.ansible_core_version
     scmid: default
-  updateVersionInAnsibleTests:
-    name: Update the `Ansible Core` version in the Ansible test expected versions
-    kind: yaml
-    spec:
-      file: tests/ansible/inventory/group_vars/all.yml
-      key: $.expected_versions.ansible_core
-    scmid: default
 
 actions:
   default:

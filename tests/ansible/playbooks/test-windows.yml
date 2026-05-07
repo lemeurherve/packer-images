@@ -7,6 +7,8 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars_files:
+    - ../../../provisioning/tools-versions.yml
 
   tasks:
     - name: Check Chocolatey (expects exit code 1)
@@ -37,33 +39,33 @@
 
     - name: Check JDK 11 version
       ansible.windows.win_shell: C:\tools\jdk-11\bin\java --version
-      register: jdk11_version
+      register: jdk11_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk11 not in jdk11_version.stdout"
+      failed_when: "jdk11_version not in jdk11_version_output.stdout"
 
     - name: Check JDK 17 version
       ansible.windows.win_shell: C:\tools\jdk-17\bin\java --version
-      register: jdk17_version
+      register: jdk17_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk17 not in jdk17_version.stdout"
+      failed_when: "jdk17_version not in jdk17_version_output.stdout"
 
     - name: Check JDK 21 version
       ansible.windows.win_shell: C:\tools\jdk-21\bin\java --version
-      register: jdk21_version
+      register: jdk21_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk21 not in jdk21_version.stdout"
+      failed_when: "jdk21_version not in jdk21_version_output.stdout"
 
     - name: Check JDK 25 version
       ansible.windows.win_shell: C:\tools\jdk-25\bin\java --version
-      register: jdk25_version
+      register: jdk25_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk25 not in jdk25_version.stdout"
+      failed_when: "jdk25_version not in jdk25_version_output.stdout"
 
     - name: Check JDK 8 version (stderr output)
       ansible.windows.win_shell: C:\tools\jdk-8\bin\java -version
-      register: jdk8_version
+      register: jdk8_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk8 not in jdk8_version.stderr"
+      failed_when: "jdk8_version not in jdk8_version_output.stderr"
 
     - name: Check Maven environment variable
       ansible.windows.win_shell: echo $env:MAVEN_HOME
@@ -75,23 +77,23 @@
       ansible.windows.win_shell: |
         $env:JAVA_HOME='C:\tools\jdk-21'
         mvn -v
-      register: maven_version
+      register: maven_version_output
       changed_when: false
-      failed_when: "expected_versions.maven not in maven_version.stdout"
+      failed_when: "maven_version not in maven_version_output.stdout"
 
     - name: Check Node.js version (with negation check)
       ansible.windows.win_shell: node --version
-      register: nodejs_version
+      register: nodejs_version_output
       changed_when: false
       failed_when: >
-        expected_versions.nodejs_windows not in nodejs_version.stdout or
-        'Please install a version by running one of the following' in nodejs_version.stdout
+        nodejs_windows_version not in nodejs_version_output.stdout or
+        'Please install a version by running one of the following' in nodejs_version_output.stdout
 
     - name: Check nuget version
       ansible.windows.win_shell: nuget help
-      register: nuget_version
+      register: nuget_version_output
       changed_when: false
-      failed_when: "expected_versions.nuget not in nuget_version.stdout"
+      failed_when: "nuget_version not in nuget_version_output.stdout"
 
     - name: Check PowerShell version
       ansible.windows.win_shell: powershell -command "(Get-Host).Version"
@@ -101,21 +103,21 @@
 
     - name: Check PowerShell Core (pwsh) version
       ansible.windows.win_shell: pwsh -command "(Get-Host).Version"
-      register: pwsh_version
+      register: pwsh_version_output
       changed_when: false
-      failed_when: "pwsh_version.stdout is not regex(expected_versions.windows_pwsh | regex_replace('\\\\.', '.*'))"
+      failed_when: "pwsh_version_output.stdout is not regex(windows_pwsh_version | regex_replace('\\\\.', '.*'))"
 
     - name: Check Python version
       ansible.windows.win_shell: python --version
-      register: python_version
+      register: python_version_output
       changed_when: false
-      failed_when: "expected_versions.python3 not in python_version.stdout"
+      failed_when: "python3_version not in python_version_output.stdout"
 
     - name: Check Ruby version
       ansible.windows.win_shell: ruby -v
-      register: ruby_version
+      register: ruby_version_output
       changed_when: false
-      failed_when: "expected_versions.ruby not in ruby_version.stdout"
+      failed_when: "ruby_version not in ruby_version_output.stdout"
 
     - name: Check .NET Framework 3.5 registry key
       ansible.windows.win_reg_stat:

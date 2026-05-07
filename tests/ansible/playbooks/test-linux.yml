@@ -7,21 +7,23 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  vars_files:
+    - ../../../provisioning/tools-versions.yml
   environment:
     PATH: "/home/jenkins/.asdf/shims:/home/jenkins/.asdf/bin:{{ ansible_env.PATH }}"
 
   tasks:
     - name: Check asdf version
       ansible.builtin.command: asdf version
-      register: asdf_version
+      register: asdf_version_output
       changed_when: false
-      failed_when: "expected_versions.asdf not in asdf_version.stdout"
+      failed_when: "asdf_version not in asdf_version_output.stdout"
 
     - name: Check azcopy version
       ansible.builtin.command: azcopy --version
-      register: azcopy_version
+      register: azcopy_version_output
       changed_when: false
-      failed_when: "expected_versions.azcopy not in azcopy_version.stdout"
+      failed_when: "azcopy_version not in azcopy_version_output.stdout"
 
     - name: Check chromium-browser version
       ansible.builtin.command: chromium-browser --version
@@ -37,94 +39,94 @@
 
     - name: Check doctl version
       ansible.builtin.command: doctl version
-      register: doctl_version
+      register: doctl_version_output
       changed_when: false
-      failed_when: "expected_versions.doctl not in doctl_version.stdout"
+      failed_when: "doctl_version not in doctl_version_output.stdout"
 
     - name: Check git version
       ansible.builtin.command: git --version
-      register: git_version
+      register: git_version_output
       changed_when: false
-      failed_when: "expected_versions.git_linux not in git_version.stdout"
+      failed_when: "git_linux_version not in git_version_output.stdout"
 
     - name: Check Go version
       ansible.builtin.command: go version
-      register: go_version
+      register: go_version_output
       changed_when: false
-      failed_when: "expected_versions.golang not in go_version.stdout"
+      failed_when: "golang_version not in go_version_output.stdout"
 
     - name: Check golangci-lint version
       ansible.builtin.command: golangci-lint --version
-      register: golangcilint_version
+      register: golangcilint_version_output
       changed_when: false
-      failed_when: "expected_versions.golangcilint not in golangcilint_version.stdout"
+      failed_when: "golangcilint_version not in golangcilint_version_output.stdout"
 
     - name: Check Helm version
       ansible.builtin.command: helm version
-      register: helm_version
+      register: helm_version_output
       changed_when: false
-      failed_when: "expected_versions.helm not in helm_version.stdout"
+      failed_when: "helm_version not in helm_version_output.stdout"
 
     - name: Check Helmfile version
       ansible.builtin.command: helmfile --version
-      register: helmfile_version
+      register: helmfile_version_output
       changed_when: false
-      failed_when: "expected_versions.helmfile not in helmfile_version.stdout"
+      failed_when: "helmfile_version not in helmfile_version_output.stdout"
 
     - name: Check Helm plugins (regex pattern matching)
       ansible.builtin.command: helm plugin list
       register: helm_plugins
       changed_when: false
       failed_when: >
-        helm_plugins.stdout is not regex('diff.*' + expected_versions.helm_diff) or
-        helm_plugins.stdout is not regex('helm-git.*' + expected_versions.helm_git) or
-        helm_plugins.stdout is not regex('secrets.*' + expected_versions.helm_secrets)
+        helm_plugins.stdout is not regex('diff.*' + helm_diff_version) or
+        helm_plugins.stdout is not regex('helm-git.*' + helm_git_version) or
+        helm_plugins.stdout is not regex('secrets.*' + helm_secrets_version)
 
     - name: Check JDK 11 version
       ansible.builtin.command: /opt/jdk-11/bin/java --version
-      register: jdk11_version
+      register: jdk11_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk11 not in jdk11_version.stdout"
+      failed_when: "jdk11_version not in jdk11_version_output.stdout"
 
     - name: Check JDK 17 version
       ansible.builtin.command: /opt/jdk-17/bin/java --version
-      register: jdk17_version
+      register: jdk17_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk17 not in jdk17_version.stdout"
+      failed_when: "jdk17_version not in jdk17_version_output.stdout"
 
     - name: Check JDK 21 version
       ansible.builtin.command: /opt/jdk-21/bin/java --version
-      register: jdk21_version
+      register: jdk21_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk21 not in jdk21_version.stdout"
+      failed_when: "jdk21_version not in jdk21_version_output.stdout"
 
     - name: Check JDK 25 version
       ansible.builtin.command: /opt/jdk-25/bin/java --version
-      register: jdk25_version
+      register: jdk25_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk25 not in jdk25_version.stdout"
+      failed_when: "jdk25_version not in jdk25_version_output.stdout"
 
     - name: Check JDK 8 version (stderr output)
       ansible.builtin.command: /opt/jdk-8/bin/java -version
-      register: jdk8_version
+      register: jdk8_version_output
       changed_when: false
-      failed_when: "expected_versions.jdk8 not in jdk8_version.stderr"
+      failed_when: "jdk8_version not in jdk8_version_output.stderr"
 
     - name: Check Maven with JDK 21 (environment variable)
       ansible.builtin.command: mvn -v
       environment:
         JAVA_HOME: /opt/jdk-21
-      register: maven_version
+      register: maven_version_output
       changed_when: false
-      failed_when: "expected_versions.maven not in maven_version.stdout"
+      failed_when: "maven_version not in maven_version_output.stdout"
 
     - name: Check Node.js version (with negation check)
       ansible.builtin.command: node --version
-      register: nodejs_version
+      register: nodejs_version_output
       changed_when: false
       failed_when: >
-        expected_versions.nodejs_linux not in nodejs_version.stdout or
-        'Please install a version by running one of the following' in nodejs_version.stdout
+        nodejs_linux_version not in nodejs_version_output.stdout or
+        'Please install a version by running one of the following' in nodejs_version_output.stdout
 
     - name: Check Parallel version
       ansible.builtin.command: parallel --version
@@ -134,15 +136,15 @@
 
     - name: Check Playwright version
       ansible.builtin.command: playwright --version
-      register: playwright_version
+      register: playwright_version_output
       changed_when: false
-      failed_when: "expected_versions.playwright not in playwright_version.stdout"
+      failed_when: "playwright_version not in playwright_version_output.stdout"
 
     - name: Check Python3 version
       ansible.builtin.command: python3 --version
-      register: python3_version
+      register: python3_version_output
       changed_when: false
-      failed_when: python3_version.rc != 0
+      failed_when: python3_version_output.rc != 0
 
     - name: Check rsync version
       ansible.builtin.command: rsync --version
@@ -155,8 +157,8 @@
       register: ruby_versions
       changed_when: false
       failed_when: >
-        expected_versions.ruby_puppet not in ruby_versions.stdout or
-        expected_versions.ruby not in ruby_versions.stdout
+        ruby_puppet_version not in ruby_versions.stdout or
+        ruby_version not in ruby_versions.stdout
 
     - name: Check rngd version
       ansible.builtin.command: rngd --version
@@ -166,9 +168,9 @@
 
     - name: Check SOPS version
       ansible.builtin.command: sops --version
-      register: sops_version
+      register: sops_version_output
       changed_when: false
-      failed_when: "expected_versions.sops not in sops_version.stdout"
+      failed_when: "sops_version not in sops_version_output.stdout"
 
     - name: Check SSH agent command
       ansible.builtin.command: which ssh-agent
@@ -178,9 +180,9 @@
 
     - name: Check typos version
       ansible.builtin.command: typos --version
-      register: typos_version
+      register: typos_version_output
       changed_when: false
-      failed_when: "expected_versions.typos not in typos_version.stdout"
+      failed_when: "typos_version not in typos_version_output.stdout"
 
     - name: Check unzip version
       ansible.builtin.command: unzip -v
@@ -190,9 +192,9 @@
 
     - name: Check xq version
       ansible.builtin.command: xq --version
-      register: xq_version
+      register: xq_version_output
       changed_when: false
-      failed_when: "expected_versions.xq not in xq_version.stdout"
+      failed_when: "xq_version not in xq_version_output.stdout"
 
     - name: Check yamllint version
       ansible.builtin.command: yamllint -v
