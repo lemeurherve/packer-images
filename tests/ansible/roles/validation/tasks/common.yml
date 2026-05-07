@@ -1,0 +1,8 @@
+---
+# Common validation tasks for all platforms (Linux and Windows)
+# Replaces tests from goss-common.yaml
+# Total: 23 command tests
+
+- name: Validation tasks - Common tools
+  ansible.builtin.debug:
+    msg: "Common validation tasks - to be implemented in Phase 2"

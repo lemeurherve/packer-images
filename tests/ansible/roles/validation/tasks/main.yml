@@ -1,0 +1,21 @@
+---
+# Main entry point for validation role
+# Delegates to platform-specific task files based on OS
+
+- name: Include common validation tasks
+  ansible.builtin.include_tasks: common.yml
+  tags:
+    - common
+    - always
+
+- name: Include Linux validation tasks
+  ansible.builtin.include_tasks: linux.yml
+  when: ansible_os_family != 'Windows'
+  tags:
+    - linux
+
+- name: Include Windows validation tasks
+  ansible.builtin.include_tasks: windows.yml
+  when: ansible_os_family == 'Windows'
+  tags:
+    - windows

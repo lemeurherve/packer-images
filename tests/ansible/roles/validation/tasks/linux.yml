@@ -1,0 +1,8 @@
+---
+# Linux-specific validation tasks
+# Replaces tests from goss-linux.yaml
+# Total: 32 command tests + 1 file test
+
+- name: Validation tasks - Linux tools
+  ansible.builtin.debug:
+    msg: "Linux validation tasks - to be implemented in Phase 3"

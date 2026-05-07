@@ -1,0 +1,8 @@
+---
+# Windows-specific validation tasks
+# Replaces tests from goss-windows.yaml and goss-windows-2019.yaml
+# Total: 18 command tests + 3 file tests
+
+- name: Validation tasks - Windows tools
+  ansible.builtin.debug:
+    msg: "Windows validation tasks - to be implemented in Phase 4"
