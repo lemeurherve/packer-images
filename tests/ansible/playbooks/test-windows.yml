@@ -1,0 +1,15 @@
+---
+# Validate Windows-specific tools
+# Replaces tests from goss-windows.yaml
+# Total: 17 command tests + 3 file tests
+
+- name: Validate Windows Jenkins Agent
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Include Windows validation tasks
+      ansible.builtin.include_role:
+        name: validation
+        tasks_from: windows.yml
